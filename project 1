@@ -1,0 +1,8 @@
+import pandas as pd
+
+def load_penguins(file_path):
+    file_path = "penguins.csv"
+    try:
+        df = pd.read_csv(file_path)
+        return df
+penguins = load_penguins("penguins.csv")

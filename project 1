@@ -14,7 +14,7 @@ def create_mass_list(island, sex, body_mass_g): # creates list containing each m
     return result
 
 mass_list = create_mass_list(penguins["island"], penguins["sex"], penguins["body_mass_g"])
-print(mass_list)
+#print(mass_list)
 
 
 def island_mass(mass_list):
@@ -37,7 +37,6 @@ def island_mass(mass_list):
 
     avg_per_sex = {key: sums_sex[key]/counts_sex[key] for key in sums_sex}
     avg_per_island = {key: sums_island[island]/counts_island[island] for key in sums_island}
-    print("Average body mass per island and sex:")
     for (island, sex), avg in avg_per_sex.items():
         print(f"The average body mass of {sex} penguins on {island} is {avg:.2f} g")
 
@@ -47,6 +46,24 @@ def island_mass(mass_list):
         print(f"{island}: {avg:.2f} g")
     return avg_per_sex, avg_per_island
 avg_mass = island_mass(mass_list)
+
+def create_length_list(species, bill_length_mm, bill_depth_mm, flipper_length_mm):
+    result = []
+    for i in range(len(species)):
+        if (bill_depth_mm[i] != bill_depth_mm[i] or bill_depth_mm[i] != bill_depth_mm[i] or flipper_length_mm[i] != flipper_length_mm[i]):
+            continue
+        result.append((species[i], float(bill_length_mm[i]), float(bill_depth_mm[i]), int(flipper_length_mm[i])))
+    return result
+
+length_list = create_length_list(
+    penguins["species"],
+    penguins["bill_length_mm"],
+    penguins["bill_depth_mm"],
+    penguins["flipper_length_mm"]
+)
+
+# Print the list
+print(length_list[:10])
 
 
 

@@ -1,4 +1,6 @@
 import pandas as pd
+import io
+import sys 
 
 def load_penguins():
     file_path = "penguins.csv"
@@ -10,7 +12,7 @@ penguins = load_penguins()
 def create_mass_list(island, sex, body_mass_g): # creates list containing each mass result and what gender & island it belongs to for island_mass
     result = []
     for i in range(len(island)):
-        result.append((island[i], sex[i], float(body_mass_g[i])))
+        result.append((island[i], sex[i], float(body_mass_g[i]))) # accounts for decimal numbers in body_mass_g
     return result
 
 mass_list = create_mass_list(penguins["island"], penguins["sex"], penguins["body_mass_g"])
@@ -20,7 +22,7 @@ mass_list = create_mass_list(penguins["island"], penguins["sex"], penguins["body
 def island_mass(mass_list):
     sums_sex, counts_sex = {}, {} # dict for sum of each island + amount of penguins per island incl. sex
     sums_island, counts_island = {}, {} # dict for sum of each island + amount of penguins per island
-    for island, sex, mass in mass_list:
+    for island, sex, mass in mass_list: # skips NaN values
         if not isinstance(mass, (int, float)) or mass != mass:
             continue
         if not isinstance(sex, str) or sex != sex:
@@ -38,21 +40,24 @@ def island_mass(mass_list):
     avg_per_sex = {key: sums_sex[key]/counts_sex[key] for key in sums_sex}
     avg_per_island = {key: sums_island[island]/counts_island[island] for key in sums_island}
     for (island, sex), avg in avg_per_sex.items():
-        print(f"The average body mass of {sex} penguins on {island} is {avg:.2f} g")
+        print(f"Average body mass of {sex} {island} penguins: {avg:.2f} g")
+    
+    print("   ")
 
 
-    print("\nThe average body mass per island is:")
+    print("Average body mass per island:")
     for island, avg in avg_per_island.items():
         print(f"{island}: {avg:.2f} g")
     return avg_per_sex, avg_per_island
 avg_mass = island_mass(mass_list)
+print("   ")
 
-def create_length_list(species, bill_length_mm, bill_depth_mm, flipper_length_mm):
+def create_length_list(species, bill_length_mm, bill_depth_mm, flipper_length_mm): # creates list containing each attribute and what species it belongs to for species_length
     result = []
     for i in range(len(species)):
         if (bill_depth_mm[i] != bill_depth_mm[i] or bill_depth_mm[i] != bill_depth_mm[i] or flipper_length_mm[i] != flipper_length_mm[i]):
             continue
-        result.append((species[i], float(bill_length_mm[i]), float(bill_depth_mm[i]), int(flipper_length_mm[i])))
+        result.append((species[i], float(bill_length_mm[i]), float(bill_depth_mm[i]), int(flipper_length_mm[i]))) # accounts for decimal numbers & whole numbers by converting to float & int
     return result
 
 length_list = create_length_list(
@@ -62,11 +67,62 @@ length_list = create_length_list(
     penguins["flipper_length_mm"]
 )
 
-# Print the list
-print(length_list[:10])
+#print(length_list[:10])
+
+def species_length(length_list):
+    sums = {} # dict for sum of each species
+    counts = {} # 
+    for species, bill_length_mm, bill_depth_mm, flipper_length_mm in length_list:
+        if species not in sums: # skips NaN values
+            sums[species] = [0, 0, 0] # starts from 0 and creates running total
+            counts[species] = 0 # starts from 0 and creates running total
+        sums[species][0] += bill_length_mm
+        sums[species][1] += bill_depth_mm
+        sums[species][2] += flipper_length_mm
+        counts[species] += 1
+    averages = {species: [s/counts[species] for s in sums[species]] for species in sums}
+
+    max_bill_length = max_bill_depth = max_flipper_length = None
+    for species, avg_values in averages.items(): # finds which average is the biggest in each category
+        if (max_bill_length is None) or (avg_values[0] > averages[max_bill_length][0]):
+            max_bill_length = species
+        if (max_bill_depth is None) or (avg_values[0] > averages[max_bill_depth][1]):
+                max_bill_depth = species
+        if (max_flipper_length is None) or (avg_values[0] > averages[max_flipper_length][2]):
+                max_flipper_length = species
+    print("   ")
+    print(f"Species with highest average bill length: {max_bill_length} ({averages[max_bill_length][0]:.2f} mm)")
+    print(f"Species with highest average bill depth: {max_bill_depth} ({averages[max_bill_depth][1]:.2f} mm)")
+    print(f"Species with highest average flipper length: {max_flipper_length} ({averages[max_flipper_length][2]:.2f} mm)")
+    return averages
+
+length_list = create_length_list(
+    penguins["species"],
+    penguins["bill_length_mm"],
+    penguins["bill_depth_mm"],
+    penguins["flipper_length_mm"]
+)
+
+avg_per_species = species_length(length_list)
+
+def generate_report(filename="penguin_results.txt"):
+    buffer = io.StringIO()
+    sys_stdout = sys.stdout 
+    sys.stdout = buffer      
+
+    mass_list = create_mass_list(penguins["island"], penguins["sex"], penguins["body_mass_g"])
+    island_mass(mass_list)
 
 
+    length_list = create_length_list(
+        penguins["species"],
+        penguins["bill_length_mm"],
+        penguins["bill_depth_mm"],
+        penguins["flipper_length_mm"]
+    )
+    species_length(length_list)
+    sys.stdout = sys_stdout
 
-
-
-
+    with open(filename, "w", encoding="utf-8") as f:
+        f.write(buffer.getvalue())
+generate_report()

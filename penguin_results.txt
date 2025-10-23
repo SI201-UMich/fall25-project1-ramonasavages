@@ -1,0 +1,15 @@
+Average body mass of male Torgersen penguins: 4034.78 g
+Average body mass of female Torgersen penguins: 3395.83 g
+Average body mass of female Biscoe penguins: 4319.38 g
+Average body mass of male Biscoe penguins: 5104.52 g
+Average body mass of female Dream penguins: 3446.31 g
+Average body mass of male Dream penguins: 3987.10 g
+   
+Average body mass per island:
+Torgersen: 3718.90 g
+Biscoe: 3718.90 g
+Dream: 3718.90 g
+   
+Species with highest average bill length: Chinstrap (48.83 mm)
+Species with highest average bill depth: Chinstrap (18.42 mm)
+Species with highest average flipper length: Adelie (189.95 mm)

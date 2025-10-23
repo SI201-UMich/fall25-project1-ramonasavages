@@ -1,3 +1,8 @@
+# Mae Savage
+# I worked by myself on this project!
+# I used gen. AI to assist in the structure of all of the functions, as well as general bug testing & fixing throughout the functions.
+# Most notably I used AI to heavily assist with the generate_report function as well as my test cases.
+
 import pandas as pd
 import io
 import sys 
@@ -127,4 +132,25 @@ def main():
         with open(filename, "w", encoding="utf-8") as f:
             f.write(buffer.getvalue())
     generate_report()
+
+
+    tests = [
+            # island_mass: general, edge
+            ("Island Gen1", island_mass, [("Torgersen","Male",4000),("Torgersen","Female",3500),("Biscoe","Male",5000),("Biscoe","Female",4500)], {"Torgersen":3750,"Biscoe":4750}),
+            ("Island Edge1", island_mass, [("Dream","Male",5000)], {"Dream":5000}),
+
+            # species_length: general, edge
+            ("Species Gen1", species_length, [("Adelie",39,18.5,181),("Adelie",41,19,190),("Chinstrap",48,18,200)], {"Adelie":[40.0,18.75,185.5]}),
+            ("Species Edge1", species_length, [("Gentoo",52,15,230)], {"Gentoo":[52,15,230]}),
+        ]
+
+    for name, func, data, expected in tests:
+        res = func([d for d in data if func==species_length and d[1]==d[1]]) if func==species_length else func(data)[1]
+        passed = all(
+    ([round(x,2) for x in res[k]] == [round(x,2) for x in v]) if isinstance(v,list) else round(res[k],2)==v
+    for k,v in expected.items()
+)
+
+        print(f"{name}: {'PASS' if passed else 'FAIL'}")
+
 main()

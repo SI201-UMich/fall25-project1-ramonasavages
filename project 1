@@ -7,30 +7,48 @@ def load_penguins():
 penguins = load_penguins()
 #print(penguins.head())
 
-def create_mass_list(island, body_mass_g):
+def create_mass_list(island, sex, body_mass_g): # creates list containing each mass result and what gender & island it belongs to for island_mass
     result = []
     for i in range(len(island)):
-        result.append((island[i], float(body_mass_g[i])))
+        result.append((island[i], sex[i], float(body_mass_g[i])))
     return result
 
-mass_list = create_mass_list(penguins["island"], penguins["body_mass_g"])
-#print(mass_list)
+mass_list = create_mass_list(penguins["island"], penguins["sex"], penguins["body_mass_g"])
+print(mass_list)
+
 
 def island_mass(mass_list):
-    sums = {}
-    counts = {}
-    for island, mass in mass_list:
+    sums_sex, counts_sex = {}, {} # dict for sum of each island + amount of penguins per island incl. sex
+    sums_island, counts_island = {}, {} # dict for sum of each island + amount of penguins per island
+    for island, sex, mass in mass_list:
         if not isinstance(mass, (int, float)) or mass != mass:
             continue
-        sums[island] = sums.get(island, 0) + mass  # running sum of each island, if island doesn't exist yet returns 0
-        counts [island] = counts.get(island, 0) + 1 # counts how many penguins per island starting at 0
+        if not isinstance(sex, str) or sex != sex:
+            continue
 
-    averages = {island: sums[island] / counts[island] for island in sums}
-    return averages
+        # per island and sex
+        key_sex = (island, sex)
+        sums_sex[key_sex] = sums_sex.get(key_sex, 0) + mass  # running sum of each island + sex, if island doesn't exist yet returns 0
+        counts_sex[key_sex] = counts_sex.get(key_sex, 0) + 1 # counts how many penguins + sex per island starting at 0
+
+        # overall avg
+        sums_island[island] = sums_island.get(island, 0) + mass
+        counts_island[island] = counts_island.get(island, 0) + 1
+
+    avg_per_sex = {key: sums_sex[key]/counts_sex[key] for key in sums_sex}
+    avg_per_island = {key: sums_island[island]/counts_island[island] for key in sums_island}
+    print("Average body mass per island and sex:")
+    for (island, sex), avg in avg_per_sex.items():
+        print(f"The average body mass of {sex} penguins on {island} is {avg:.2f} g")
+
+
+    print("\nThe average body mass per island is:")
+    for island, avg in avg_per_island.items():
+        print(f"{island}: {avg:.2f} g")
+    return avg_per_sex, avg_per_island
 avg_mass = island_mass(mass_list)
 
-for island, avg in avg_mass.items():
-    print(f"{island}: {avg:.2f} g")
+
 
 
 

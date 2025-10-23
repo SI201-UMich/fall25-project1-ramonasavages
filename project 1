@@ -1,8 +1,22 @@
 import pandas as pd
 
-def load_penguins(file_path):
+def load_penguins():
     file_path = "penguins.csv"
-    try:
-        df = pd.read_csv(file_path)
-        return df
-penguins = load_penguins("penguins.csv")
+    df = pd.read_csv(file_path)
+    return df
+penguins = load_penguins()
+#print(penguins.head())
+
+def create_mass_list(island, body_mass_g):
+    result = []
+    for i in range(len(island)):
+        result.append((island[i], float(body_mass_g[i])))
+    return result
+
+mass_list = create_mass_list(penguins["island"], penguins["body_mass_g"])
+#print(mass_list)
+
+def get_mass_avg(mass_list):
+
+
+

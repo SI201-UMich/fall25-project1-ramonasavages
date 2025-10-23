@@ -16,7 +16,22 @@ def create_mass_list(island, body_mass_g):
 mass_list = create_mass_list(penguins["island"], penguins["body_mass_g"])
 #print(mass_list)
 
-def get_mass_avg(mass_list):
+def island_mass(mass_list):
+    sums = {}
+    counts = {}
+    for island, mass in mass_list:
+        if not isinstance(mass, (int, float)) or mass != mass:
+            continue
+        sums[island] = sums.get(island, 0) + mass  # running sum of each island, if island doesn't exist yet returns 0
+        counts [island] = counts.get(island, 0) + 1 # counts how many penguins per island starting at 0
+
+    averages = {island: sums[island] / counts[island] for island in sums}
+    return averages
+avg_mass = island_mass(mass_list)
+
+for island, avg in avg_mass.items():
+    print(f"{island}: {avg:.2f} g")
+
 
 
 

@@ -12,4 +12,4 @@ Dream: 3718.90 g
    
 Species with highest average bill length: Chinstrap (48.83 mm)
 Species with highest average bill depth: Chinstrap (18.42 mm)
-Species with highest average flipper length: Adelie (189.95 mm)
+Species with highest average flipper length: Gentoo (217.19 mm)

@@ -3,6 +3,10 @@
 # I used gen. AI to assist in the structure of all of the functions, as well as general bug testing & fixing throughout the functions.
 # Most notably I used AI to heavily assist with the generate_report function as well as my test cases.
 
+# My questions were:
+# What is the average mass of each penguin species per island, as well as per gender?
+# Which penguin species have the largest average attribute sizes?  
+
 import pandas as pd
 import io
 import sys 
@@ -73,7 +77,6 @@ def main():
         penguins["flipper_length_mm"]
     )
 
-    #print(length_list[:10])
 
     def species_length(length_list):
         sums = {} # dict for sum of each species
